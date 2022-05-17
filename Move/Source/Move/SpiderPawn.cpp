@@ -82,7 +82,7 @@ void ASpiderPawn::Tick( float DeltaTime )
 
             static FName SpiderTraceIdent = FName(TEXT("SpidferTrace"));
             FCollisionQueryParams TraceParams(SpiderTraceIdent, true, this);
-            TraceParams.bTraceAsyncScene = true;
+            //TraceParams.bTraceAsyncScene = true;
             
             const FName TraceTag("SpiderTraceTag");
 
@@ -91,8 +91,8 @@ void ASpiderPawn::Tick( float DeltaTime )
             FVector HitNormal, HitNormal2;
 
             //Check if convex corner
-            if (!GetWorld()->LineTraceSingle(HitData, DirectionSocketLocation, FLSocketLoc, ECollisionChannel::ECC_Pawn, TraceParams) && 
-                !GetWorld()->LineTraceSingle(HitData2, DirectionSocketLocation, FRSocketLoc, ECollisionChannel::ECC_Pawn, TraceParams))
+            if (!GetWorld()->LineTraceSingleByChannel(HitData, DirectionSocketLocation, FLSocketLoc, ECollisionChannel::ECC_Pawn, TraceParams) && 
+                !GetWorld()->LineTraceSingleByChannel(HitData2, DirectionSocketLocation, FRSocketLoc, ECollisionChannel::ECC_Pawn, TraceParams))
             {
                 HitNormal = HitData.ImpactNormal;
                 HitNormal2 = HitData2.ImpactNormal;
@@ -103,7 +103,7 @@ void ASpiderPawn::Tick( float DeltaTime )
                 }
             }
             //Point directly in front
-            else if (GetWorld()->LineTraceSingle(HitData, BellySocketLoc, FrontSocketLoc, ECollisionChannel::ECC_Pawn, TraceParams))
+            else if (GetWorld()->LineTraceSingleByChannel(HitData, BellySocketLoc, FrontSocketLoc, ECollisionChannel::ECC_Pawn, TraceParams))
             {
                 HitNormal = HitData.ImpactNormal;
                 if (HitData.GetActor())
@@ -119,17 +119,17 @@ void ASpiderPawn::Tick( float DeltaTime )
 }
 
 // Called to bind functionality to input
-void ASpiderPawn::SetupPlayerInputComponent(class UInputComponent* InputComponent)
+void ASpiderPawn::SetupPlayerInputComponent(UInputComponent* InInputComponent)
 {
-	Super::SetupPlayerInputComponent(InputComponent);
+	Super::SetupPlayerInputComponent(InInputComponent);
 
 }
 
 FVector ASpiderPawn::GetZVector()
 {
-    FVector DirectionSocketLocation = GetMesh()->GetSocketLocation("DetectionSocket");
-    FVector BellySocketLoc = GetMesh()->GetSocketLocation("Belly");
-    return DirectionSocketLocation - BellySocketLoc;
+    FVector DirectionSocketLocation_ = GetMesh()->GetSocketLocation("DetectionSocket");
+    FVector BellySocketLoc_ = GetMesh()->GetSocketLocation("Belly");
+    return DirectionSocketLocation_ - BellySocketLoc_;
     
 }
 
@@ -151,7 +151,7 @@ void ASpiderPawn::StickToSurface()
     FVector newRight;
 
     //Trace to get the floor normal under your actor
-    if (world->LineTraceSingle(hitResultTrace, BellySocketLoc, UnderBellySocketLoc, queryParams, objQueryParams))
+    if (world->LineTraceSingleByObjectType(hitResultTrace, BellySocketLoc, UnderBellySocketLoc, objQueryParams, queryParams))
     {
         under = hitResultTrace.ImpactPoint;
         newUp = hitResultTrace.ImpactNormal;
@@ -200,7 +200,7 @@ bool ASpiderPawn::TransitionToWall(bool IsConvex)
     }
 
     //Trace to get the surface normal in front of actor
-    if (world->LineTraceSingle(hitResultTrace, Start, End, queryParams, objQueryParams))
+    if (world->LineTraceSingleByObjectType(hitResultTrace, Start, End, objQueryParams, queryParams))
     {
         under = hitResultTrace.ImpactPoint;
         newUp = hitResultTrace.ImpactNormal;

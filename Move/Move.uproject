@@ -1,6 +1,6 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "4.10",
+	"EngineAssociation": "{F5AEC2BC-46EC-9962-7063-36BADC0DEF7E}",
 	"Category": "",
 	"Description": "",
 	"Modules": [
@@ -11,9 +11,5 @@
 		}
 	],
 	"Plugins": [
-		{
-			"Name": "Substance",
-			"Enabled": true
-		}
 	]
 }

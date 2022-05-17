@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Move.h"
 #include "MoveGameMode.h"
+#include "Move.h"
 
 AMoveGameMode::AMoveGameMode(const FObjectInitializer& ObjectInitializer)
 : Super(ObjectInitializer)
